@@ -70,7 +70,8 @@ while True:
                     # the face area is considered in the tracking.
                     
                     ##-your-code-starts-here-##
-                    roi_gray = np.zeros_like(gray)  # replace me
+                    x,y,w,h = faces[0]
+                    roi_gray = gray[y:y+h, x:x+w]  # replace me
                     ##-your-code-ends-here-##
 
                     # Get trackable points
@@ -84,7 +85,9 @@ while True:
                     
                     # Convert from ROI to image coordinates
                     ##-your-code-starts-here-##
-
+                    if p0 is not None:
+                        p0[:, 0] += x
+                        p0[:, 1] += y
                     ##-your-code-ends-here-##
 
                 # Save grayscale copy for next iteration
@@ -105,18 +108,24 @@ while True:
                 
                 # Select good points. Use isFound to select valid found points from p1
                 ##-your-code-starts-here-##
-
+                is_found = isFound.flatten().astype(bool)
+                good1 = p1[is_found]
+                good0 = p0[is_found]
                 ##-your-code-starts-here-##
                 
                 # Draw points using e.g. cv2.drawMarker
                 ##-your-code-starts-here-##
+                for points in good1:
+                    x, y = points.ravel()
+                    cv2.drawMarker(img, (int(x), int(y)), (0,255,255), cv2.MARKER_CROSS, 5, 1)
 
                 ##-your-code-ends-here-##
                 
                 # Update p0 (which points should be kept?) and gray_prev for 
                 # next iteration
                 ##-your-code-starts-here-##
-
+                p0 = good1
+                gray_prev = gray.copy()
                 ##-your-code-ends-here-##
 
             # Quit text

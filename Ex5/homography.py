@@ -20,9 +20,9 @@ flann = cv2.FlannBasedMatcher(index_params, search_params)
 # Store the matches to "matches"-variable.
 
 ##--your-code-starts-here--##
-grayframe = test_img #replace me
-keyp_grayframe, descrip_keyframe = 0, 0 # replace me 
-matches = [] # replace me
+grayframe = cv2.cvtColor(test_img, cv2.COLOR_BGR2GRAY) #replace me
+keyp_grayframe, descrip_keyframe = sift.detectAndCompute(grayframe, None) # replace me
+matches = flann.knnMatch(descrip_image, descrip_keyframe, k=2) # replace me
 ##--your-code-ends-here--##
 
 good_points = []
@@ -58,7 +58,15 @@ while cv2.waitKey(0) != ord('q'):
             # the code will throw an error if you don't store it anywhere. 
             
             ##--your-code-starts-here--##
-            matrix = 0  # replace me
+            projection_threshold = 10
+            algorithm1 = cv2.RANSAC
+            algorithm2 = cv2.USAC_MAGSAC
+            algorithm3 = cv2.RHO
+            algorithm4 = cv2.LMEDS
+            matrix, mask = cv2.findHomography(query_pts, test_pts, algorithm1, projection_threshold)
+            #matrix, mask = cv2.findHomography(query_pts, test_pts, algorithm2, projection_threshold)
+            #matrix, mask = cv2.findHomography(query_pts, test_pts, algorithm3, projection_threshold)
+            #matrix, mask = cv2.findHomography(query_pts, test_pts, algorithm4)  # replace me
             ##--your-code-ends-here--##
             
             # Perspective transform
@@ -76,7 +84,8 @@ while cv2.waitKey(0) != ord('q'):
             # should you do with the homography matrix?
             
             ##--your-code-starts-here--##
-            im_warped = 0 # replace me
+            homography_inverse = np.linalg.inv(matrix)
+            im_warped =  cv2.warpPerspective(test_img, homography_inverse, dsize=(720,540))# replace me
             ##--your-code-ends-here--##
             cv2.imshow("Warped image", im_warped)
 

@@ -58,8 +58,8 @@ N = trianglin(P1, P2,
 # book covers horizontal and vertical sides using the points and calculate 
 # the norm of these to acquire the height and width (mm).
 ##-your-code-starts-here-##
-picture_w_mm = 0.
-picture_h_mm = 0.
+picture_w_mm = np.linalg.norm(L[:3]-M[:3])
+picture_h_mm = np.linalg.norm(L[:3]-N[:3])
 ##-your-code-ends-here-##
 print("Picture width: %.2f mm" % picture_w_mm)
 print("Picture height: %.2f mm" % picture_h_mm)
